@@ -176,11 +176,11 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             print(target_x)
             global action
             # 900 x 600
-            if (target_x > 395 and target_x < 405):  # 400 = center
+            if (target_x > 405 and target_x < 415):  # 420 = center (Need to Calibrate!)
                 action = 'fire'
-            elif (target_x >= 405):
+            elif (target_x >= 415):
                 action = 'right'
-            elif (target_x <= 395):
+            elif (target_x <= 405):
                 action = 'left'
             else:
                 action = ''
@@ -207,7 +207,7 @@ step_n = 0
 step_aim = 0
 
 
-while True:
+def update():
     # Take screenshot using PyAutoGUI
     img = pyautogui.screenshot()
 
@@ -233,10 +233,6 @@ while True:
 
     # ===================================
 
-    step_f += 1
-    step_n += 1
-    step_aim += 1
-
     if (action == 'fire'):
         action_fire()
 
@@ -245,7 +241,6 @@ while True:
 
     if (action == 'left'):
         action_left()
-
 
         # Write it to the output file
     # out.write(frame)
@@ -290,8 +285,8 @@ while True:
     # Optional: Display the recording screen
     cv2.imshow('Live', frame)
 
-    # Stop recording when we press 'q'
-    if cv2.waitKey(1) == ord('q'):
-        break
+    Timer(0.1, update).start()
 
-cv2.destroyAllWindows()
+update()
+
+#cv2.destroyAllWindows()
