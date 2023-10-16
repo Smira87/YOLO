@@ -1,7 +1,7 @@
 import pyautogui
 import cv2
 import numpy as np
-
+from threading import Timer
 from ultralytics import YOLO
 import time
 
@@ -176,11 +176,11 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             print(target_x)
             global action
             # 900 x 600
-            if (target_x > 405 and target_x < 415):  # 420 = center (Need to Calibrate!)
+            if (target_x > 395 and target_x < 405):  # 400 = center
                 action = 'fire'
-            elif (target_x >= 415):
+            elif (target_x >= 405):
                 action = 'right'
-            elif (target_x <= 405):
+            elif (target_x <= 395):
                 action = 'left'
             else:
                 action = ''
@@ -205,6 +205,7 @@ action = ''
 step_f = 0
 step_n = 0
 step_aim = 0
+
 
 while True:
     # Take screenshot using PyAutoGUI
@@ -232,6 +233,10 @@ while True:
 
     # ===================================
 
+    step_f += 1
+    step_n += 1
+    step_aim += 1
+
     if (action == 'fire'):
         action_fire()
 
@@ -240,6 +245,7 @@ while True:
 
     if (action == 'left'):
         action_left()
+
 
         # Write it to the output file
     # out.write(frame)
