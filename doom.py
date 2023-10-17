@@ -176,11 +176,11 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             print(target_x)
             global action
             # 900 x 600
-            if (target_x > 405 and target_x < 415):  # 420 = center (Need to Calibrate!)
+            if (target_x > 365 and target_x < 375):  # 370 = center (Need to Calibrate!)
                 action = 'fire'
-            elif (target_x >= 415):
+            elif (target_x >= 375):
                 action = 'right'
-            elif (target_x <= 405):
+            elif (target_x <= 365):
                 action = 'left'
             else:
                 action = ''
@@ -205,6 +205,7 @@ action = ''
 step_f = 0
 step_n = 0
 step_aim = 0
+
 
 
 def update():
