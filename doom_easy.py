@@ -65,13 +65,24 @@ class Input(ctypes.Structure):
 
 # Actuals Functions
 #action_counter = 0
-def level_1():
+
+def go_forward(sec):
     PressKey(W)
-    time.sleep(3)
+    time.sleep(sec)
     ReleaseKey(W)
-    PressKey(G)
-    time.sleep(1)
-    ReleaseKey(G)
+def turn(dir, sec):
+    if dir == "right":
+        PressKey(H)
+        time.sleep(sec)
+        ReleaseKey(H)
+    elif dir == "left":
+        PressKey(G)
+        time.sleep(sec)
+        ReleaseKey(G)
+def level_1():
+    go_forward(3)
+    turn("left", 1)
+    time.sleep(10)
 
 def action_fire():
     PressKey(K)
