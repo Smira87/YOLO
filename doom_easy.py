@@ -10,6 +10,7 @@ import time
 
 SendInput = ctypes.windll.user32.SendInput
 
+E = 0x12
 W = 0x11
 A = 0x1E
 S = 0x1F
@@ -87,12 +88,15 @@ def turn(dir, sec):
 def level_1():
     go("forward", 1.7)
     go("backwards", 1)
-    time.sleep(30)
-    go("forward", 2)
+    time.sleep(32)
+    go("forward", 1.1)
     turn("left", 0.6)
     go("forward", 4)
     turn("right", 0.6)
     go("forward", 4)
+    PressKey(E)
+    go("forward", 3)
+
 
 
 
