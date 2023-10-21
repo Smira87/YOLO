@@ -66,10 +66,15 @@ class Input(ctypes.Structure):
 # Actuals Functions
 #action_counter = 0
 
-def go_forward(sec):
-    PressKey(W)
-    time.sleep(sec)
-    ReleaseKey(W)
+def go(dir, sec):
+    if dir == "forward":
+        PressKey(W)
+        time.sleep(sec)
+        ReleaseKey(W)
+    elif dir == "backwards":
+        PressKey(S)
+        time.sleep(sec)
+        ReleaseKey(S)
 def turn(dir, sec):
     if dir == "right":
         PressKey(H)
@@ -80,9 +85,16 @@ def turn(dir, sec):
         time.sleep(sec)
         ReleaseKey(G)
 def level_1():
-    go_forward(3)
-    turn("left", 1)
-    time.sleep(10)
+    go("forward", 1.7)
+    go("backwards", 1)
+    time.sleep(30)
+    go("forward", 2)
+    turn("left", 0.6)
+    go("forward", 4)
+    turn("right", 0.6)
+    go("forward", 4)
+
+
 
 def action_fire():
     PressKey(K)
@@ -190,7 +202,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             print(target_x)
             global action
             # 800 x 600
-            if (target_x > 365 and target_x < 375):  # 370 = center (Need to Calibrate!)
+            if (target_x > 360 and target_x < 380):  # 370 = center (Need to Calibrate!)
                 action = 'fire'
             elif (target_x >= 375):
                 action = 'right'
