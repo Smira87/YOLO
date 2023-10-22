@@ -67,6 +67,16 @@ class Input(ctypes.Structure):
 # Actuals Functions
 #action_counter = 0
 
+def go_forward_with_strafes():
+    PressKey(W)
+    time.sleep(1)
+    PressKey(A)
+    time.sleep(0.5)
+    ReleaseKey(A)
+    PressKey(D)
+    time.sleep(0.5)
+    ReleaseKey(D)
+    ReleaseKey(D)
 def go(dir, sec):
     if dir == "forward":
         PressKey(W)
@@ -90,8 +100,8 @@ def level_1():
     go("backwards", 1)
     time.sleep(32)
     go("forward", 1.1)
-    turn("left", 0.6)
-    go("forward", 4)
+    turn("left", 0.7)
+    go_forward_with_strafes()
     turn("right", 0.6)
     go("forward", 4)
     PressKey(E)
