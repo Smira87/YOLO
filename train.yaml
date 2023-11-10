@@ -1,0 +1,13 @@
+train: YOLO8_3/train
+val: YOLO8_3/valid
+test: YOLO8_3/test
+
+nc: 1
+names: ['p1']
+
+roboflow:
+  workspace: nau-pi9bv
+  project: point2-test
+  version: 3
+  license: MIT
+  url: https://universe.roboflow.com/nau-pi9bv/point2-test/dataset/3
