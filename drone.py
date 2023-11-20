@@ -1,3 +1,5 @@
+import math
+
 import pyautogui
 import cv2
 import numpy as np
@@ -9,6 +11,9 @@ import ctypes
 import time
 
 SendInput = ctypes.windll.user32.SendInput
+
+close_target_x = 999
+close_target_y = 999
 
 E = 0x12
 W = 0x11
@@ -202,7 +207,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
 
         print(int_label)
 
-        if (int_label == 10):  # Traffic Light
+        if (int_label == 1):  # Traffic Light
             print('============')
             target_x = int(box[0]) + (int(box[2]) - int(box[0])) / 2
             target_y = int(box[1]) + (int(box[3]) - int(box[1])) / 2
@@ -214,20 +219,45 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             print(target_x)
             print("Y =" + str(target_y))
             global action
+            global close_target_x
+            global close_target_y
             # 800 x 600
 
-            if (target_x >= 305):
-                action = 'right'
-            elif (target_x <= 295):
-                action = 'left'
-            elif (target_y <= 220):
-                action = 'up'
-            elif (target_y >= 230):
-                action = 'down'
-            elif (target_x > 295 and target_x < 305 and target_y > 220 and target_y < 230):  # 370 = center (Need to Calibrate!)
-                action = 'fire'
+            cv2.rectangle(image, (300, 225), (300 + 4, 225 + 4), (255, 255, 50), thickness=2,
+                          lineType=cv2.LINE_AA)
+
+            dx = abs(300 - target_x)
+            dy = abs(225 - target_y)
+            close_dx = abs(300 - close_target_x)
+            close_dy = abs(225 - close_target_y)
+
+            d_target = math.sqrt(dx ** 2 + dy ** 2)
+            close_d_target = math.sqrt(close_dx ** 2 + close_dy ** 2)
+
+            dx = abs(300 - target_x)
+            dy = abs(225 - target_y)
+
+            if d_target > close_d_target:
+                target_x = close_target_x
+                target_y = close_target_y
             else:
-                action = ''
+                close_target_x = target_x
+                close_target_y = target_y
+
+            if (dx > dy):
+                if (target_x >= 305):
+                    action = 'right'
+                elif (target_x <= 295):
+                    action = 'left'
+            else:
+                if (target_y <= 220):
+                    action = 'up'
+                elif (target_y >= 230):
+                    action = 'down'
+            if (target_x > 295 and target_x < 305 and target_y > 220 and target_y < 230):  # 370 = center (Need to Calibrate!)
+                action = 'fire'
+                close_target_x = close_target_y = 999
+
             print('============')
 
         if conf:
@@ -296,7 +326,7 @@ def video_loop():
         # Optional: Display the recording screen
         cv2.imshow('Live', frame)
         cv2.waitKey(1)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 
 p1 = threading.Thread(target=video_loop)
