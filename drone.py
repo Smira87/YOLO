@@ -233,10 +233,10 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
 
             d_target = math.sqrt(dx ** 2 + dy ** 2)
             close_d_target = math.sqrt(close_dx ** 2 + close_dy ** 2)
-
-            dx = abs(300 - target_x)
-            dy = abs(225 - target_y)
-
+            print("--------------------")
+            print(d_target)
+            print(close_d_target)
+            print("--------------------")
             if d_target > close_d_target:
                 target_x = close_target_x
                 target_y = close_target_y
@@ -244,7 +244,10 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
                 close_target_x = target_x
                 close_target_y = target_y
 
-            if (dx > dy):
+            '''dx = abs(300 - target_x)
+            dy = abs(225 - target_y)'''
+
+            if (abs(dx) >= abs(dy)):
                 if (target_x >= 305):
                     action = 'right'
                 elif (target_x <= 295):
