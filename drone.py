@@ -95,7 +95,7 @@ def level_1():
     time.sleep(32)
     go("forward", 1.1)
     turn("left", 0.7)
-    go_forward_with_strafes()
+    
     turn("right", 0.6)
     go("forward", 4)
     PressKey(E)
@@ -108,15 +108,21 @@ def action_fire():
 
 
 def action_left():
-    PressKey(G)
-    ReleaseKey(G)
+    PressKey(A)
+    ReleaseKey(A)
 
 
 def action_right():
-    PressKey(H)
-    ReleaseKey(H)
+    PressKey(D)
+    ReleaseKey(D)
 
+def action_up():
+    PressKey(W)
+    ReleaseKey(W)
 
+def action_down():
+    PressKey(S)
+    ReleaseKey(S)
 def PressKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
@@ -196,7 +202,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
 
         print(int_label)
 
-        if (int_label == 1 or int_label == 63):  # TV or Man
+        if (int_label == 10):  # TV or Man
             print('============')
             target_x = int(box[0]) + (int(box[2]) - int(box[0])) / 2
             target_y = int(box[1]) + (int(box[3]) - int(box[1])) / 2
@@ -206,14 +212,20 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             cv2.rectangle(image, (target_x, target_y), (target_x + 4, target_y + 4), (255, 50, 50), thickness=2,
                           lineType=cv2.LINE_AA)
             print(target_x)
+            print("Y =" + str(target_y))
             global action
             # 800 x 600
-            if (target_x > 360 and target_x < 380):  # 370 = center (Need to Calibrate!)
-                action = 'fire'
-            elif (target_x >= 375):
+
+            if (target_x >= 310):
                 action = 'right'
-            elif (target_x <= 365):
+            elif (target_x <= 290):
                 action = 'left'
+            elif (target_y <= 240):
+                action = 'up'
+            elif (target_y >= 260):
+                action = 'down'
+            elif (target_x > 290 and target_x < 310 and target_y > 240 and target_y < 260):  # 370 = center (Need to Calibrate!)
+                action = 'fire'
             else:
                 action = ''
             print('============')
@@ -275,45 +287,11 @@ def video_loop():
         if (action == 'left'):
             action_left()
 
-            # Write it to the output file
-        # out.write(frame)
+        if (action == 'up'):
+            action_up()
 
-        grayImage = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # blurred = cv2.GaussianBlur(grayImage, (3, 3), 0) # Blur
-        image_edges = cv2.Canny(grayImage, 100, 200)
-
-        # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10, 10))
-        # dilate = cv2.dilate(image_edges, kernel, iterations=1)
-
-        kernel = np.ones((15, 15), np.uint8)
-        dilate = cv2.morphologyEx(image_edges, cv2.MORPH_CLOSE, kernel, 3)
-
-        # find the contours in the dilated image
-        contours, _ = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        contour_list = []
-        for contour in contours:
-            # approximte for circles
-            approx = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
-            area = cv2.contourArea(contour)
-            if ((len(approx) > 5) & (area > 200)):
-                contour_list.append(contour)
-
-        # draw the contours on a copy of the original image
-        cv2.drawContours(frame, contour_list, -1, (0, 255, 0), 3)
-
-        top_y = 999999
-
-        for contour in contour_list:
-            (x, y, w, h) = cv2.boundingRect(contour)
-            if top_y > y:
-                top_y = y
-
-        for contour in contour_list:
-
-            (x, y, w, h) = cv2.boundingRect(contour)
-            if top_y == y:
-                cv2.rectangle(frame, (x, y), ((x + w), (y + h)), (255, 255, 255), 3)
+        if (action == 'down'):
+            action_down()
 
         # Optional: Display the recording screen
         cv2.imshow('Live', frame)
