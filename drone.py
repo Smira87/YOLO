@@ -202,7 +202,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
 
         print(int_label)
 
-        if (int_label == 10):  # TV or Man
+        if (int_label == 10):  # Traffic Light
             print('============')
             target_x = int(box[0]) + (int(box[2]) - int(box[0])) / 2
             target_y = int(box[1]) + (int(box[3]) - int(box[1])) / 2
@@ -226,7 +226,6 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
                 action = 'down'
             elif (target_x > 295 and target_x < 305 and target_y > 220 and target_y < 230):  # 370 = center (Need to Calibrate!)
                 action = 'fire'
-                break
             else:
                 action = ''
             print('============')
@@ -243,7 +242,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
         action = ''
 
 
-model = YOLO('yolov8n.pt')
+model = YOLO('best.pt')
 
 action = ''
 
