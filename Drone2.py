@@ -205,20 +205,21 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             min_dist_to_target = cur_dist_to_target
             picked_box = box
 
+    box = picked_box
     if score:
-        label = labels[int(picked_box[-1]) + 1] + " " + str(round(100 * float(picked_box[-2]), 1)) + "%"
+        label = labels[int(box[-1]) + 1] + " " + str(round(100 * float(box[-2]), 1)) + "%"
     else:
-        label = labels[int(picked_box[-1]) + 1]
+        label = labels[int(box[-1]) + 1]
         # filter every box under conf threshold if conf threshold setted
 
-    int_label = int(picked_box[-1]) + 1
+    int_label = int(box[-1]) + 1
 
     print(int_label)
 
     if (int_label == 1):  # Tank
         print('============')
-        target_x = int(picked_box[0]) + (int(picked_box[2]) - int(picked_box[0])) / 2
-        target_y = int(picked_box[1]) + (int(picked_box[3]) - int(picked_box[1])) / 2
+        target_x = int(box[0]) + (int(box[2]) - int(box[0])) / 2
+        target_y = int(box[1]) + (int(box[3]) - int(box[1])) / 2
         target_x = int(round(target_x))
         target_y = int(round(target_y))
         target = (target_x, target_y)

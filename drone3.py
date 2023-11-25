@@ -228,18 +228,18 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
             global action
             # 800 x 600
 
-            cv2.rectangle(image, (300, 225), (300 + 4, 225 + 4), (255, 255, 50), thickness=2,
+            cv2.rectangle(image, (300, 230), (300 + 4, 230 + 4), (255, 255, 50), thickness=2,
                           lineType=cv2.LINE_AA)
             if (picked_target_x >= 305):
                 action = 'right'
             elif (picked_target_x <= 295):
                 action = 'left'
-            if (picked_target_y <= 220):
+            if (picked_target_y <= 230):
                 action = 'up'
-            elif (picked_target_y >= 230):
+            elif (picked_target_y >= 240):
                 action = 'down'
             if (
-                    picked_target_x > 290 and picked_target_x < 310 and picked_target_y > 215 and picked_target_y < 235):  # 370 = center (Need to Calibrate!)
+                    picked_target_x > 290 and picked_target_x < 310 and picked_target_y > 225 and picked_target_y < 240):  # 370 = center (Need to Calibrate!)
                 action = 'fire'
                 close_target_x = close_target_y = 999
 
