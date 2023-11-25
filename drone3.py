@@ -32,7 +32,6 @@ DIR_DOWN = 0xD0
 # C struct redefinitions
 PUL = ctypes.POINTER(ctypes.c_ulong)
 
-
 class KeyBdInput(ctypes.Structure):
     _fields_ = [("wVk", ctypes.c_ushort),
                 ("wScan", ctypes.c_ushort),
@@ -137,7 +136,6 @@ def PressKey(hexKeyCode):
     x = Input(ctypes.c_ulong(1), ii_)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
-
 def ReleaseKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
@@ -196,59 +194,56 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
 
     int_label = 0
     min_dist_to_target = 999
-    global picked_box
-    for box in boxes:
-        dx = abs((int(box[0]) + (int(box[2]) - int(box[0])) / 2) - 300)
-        dy = abs((int(box[1]) + (int(box[3]) - int(box[1])) / 2) - 225)
-        cur_dist_to_target = math.sqrt(dx ** 2 + dy ** 2)
-        if cur_dist_to_target < min_dist_to_target:
-            min_dist_to_target = cur_dist_to_target
-            picked_box = box
 
-    if score:
-        label = labels[int(picked_box[-1]) + 1] + " " + str(round(100 * float(picked_box[-2]), 1)) + "%"
-    else:
-        label = labels[int(picked_box[-1]) + 1]
+    # plot each boxes
+    for box in boxes:
+        # add score in label if score=True
+        if score:
+            label = labels[int(box[-1]) + 1] + " " + str(round(100 * float(box[-2]), 1)) + "%"
+        else:
+            label = labels[int(box[-1]) + 1]
         # filter every box under conf threshold if conf threshold setted
 
-    int_label = int(picked_box[-1]) + 1
+        int_label = int(box[-1]) + 1
 
-    print(int_label)
+        print(int_label)
 
-    if (int_label == 1):  # Tank
-        print('============')
-        target_x = int(picked_box[0]) + (int(picked_box[2]) - int(picked_box[0])) / 2
-        target_y = int(picked_box[1]) + (int(picked_box[3]) - int(picked_box[1])) / 2
-        target_x = int(round(target_x))
-        target_y = int(round(target_y))
-        target = (target_x, target_y)
-        cv2.rectangle(image, (target_x, target_y), (target_x + 4, target_y + 4), (255, 50, 50), thickness=2,
+        if (int_label == 1):  # Tank
+            print('============')
+            target_x = int(box[0]) + (int(box[2]) - int(box[0])) / 2
+            target_y = int(box[1]) + (int(box[3]) - int(box[1])) / 2
+            target_x = int(round(target_x))
+            target_y = int(round(target_y))
+            target = (target_x, target_y)
+            dx = abs(target_x - 300)
+            dy = abs(target_y - 225)
+            cur_dist_to_target = math.sqrt(dx ** 2 + dy ** 2)
+            if cur_dist_to_target < min_dist_to_target:
+                min_dist_to_target = cur_dist_to_target
+                picked_target_x = target_x
+                picked_target_y = target_y
+                cv2.rectangle(image, (picked_target_x, picked_target_y), (picked_target_x + 4, picked_target_y + 4), (255, 50, 50), thickness=2,
                           lineType=cv2.LINE_AA)
-        print(target_x)
-        print("Y =" + str(target_y))
-        global action
 
+            global action
             # 800 x 600
 
-        cv2.rectangle(image, (300, 225), (300 + 4, 225 + 4), (255, 255, 50), thickness=2,
+            cv2.rectangle(image, (300, 225), (300 + 4, 225 + 4), (255, 255, 50), thickness=2,
                           lineType=cv2.LINE_AA)
-
-
-        if (target_x >= 305):
-            action = 'right'
-        elif (target_x <= 295):
-            action = 'left'
-        if (target_y <= 220):
-            action = 'up'
-        elif (target_y >= 230):
-            action = 'down'
-        if (
-                target_x > 290 and target_x < 310 and target_y > 215 and target_y < 235):  # 370 = center (Need to Calibrate!)
-            action = 'fire'
-            close_target_x = close_target_y = 999
+            if (picked_target_x >= 305):
+                action = 'right'
+            elif (picked_target_x <= 295):
+                action = 'left'
+            if (picked_target_y <= 220):
+                action = 'up'
+            elif (picked_target_y >= 230):
+                action = 'down'
+            if (
+                    picked_target_x > 290 and picked_target_x < 310 and picked_target_y > 215 and picked_target_y < 235):  # 370 = center (Need to Calibrate!)
+                action = 'fire'
+                close_target_x = close_target_y = 999
 
             print('============')
-            print(boxes)
 
         if conf:
             if box[-2] > conf:
