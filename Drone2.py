@@ -246,7 +246,7 @@ def plot_bboxes(image, boxes, labels=[], colors=[], score=True, conf=None):
         if (
                 target_x > 290 and target_x < 310 and target_y > 215 and target_y < 235):  # 370 = center (Need to Calibrate!)
             action = 'fire'
-            close_target_x = close_target_y = 999
+
 
             print('============')
             print(boxes)
